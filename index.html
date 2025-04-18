@@ -27,7 +27,7 @@
 
     <script>
         const data = [];
-        fetch('/Table_Input.csv')
+        fetch('Table_Input.csv')
             .then(response => response.text())
             .then(text => {
                 const lines = text.trim().split('\n');
