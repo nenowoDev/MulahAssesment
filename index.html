@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 300px;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            border: 1px solid #333;
+            padding: 8px;
+            text-align: left;
+        }
+    </style>
+</head>
+
+<body>
+    <h2>Table1</h2>
+    <div id="table1"></div>
+
+    <h2>Table2</h2>
+    <div id="table2"></div>
+
+    <script>
+        const data = [];
+        fetch('/Table_Input.csv')
+            .then(response => response.text())
+            .then(text => {
+                const lines = text.trim().split('\n');
+
+                for (let i = 1; i < lines.length; i++) {
+                    const [index, value] = lines[i].split(',').map(cell => cell.trim());
+                    data.push({ index, value: Number(value) });
+                }
+
+                let html = '<table>';
+                html += '<tr><th>Index #</th><th>Value</th></tr>';
+                for (let i = 0; i < data.length; i++) {
+                    html += `<tr><td>${data[i].index}</td><td>${data[i].value}</td></tr>`;
+                }
+
+                html += '</table>';
+                document.getElementById('table1').innerHTML = html;
+
+                const categories = [
+                    { name: "Alpha", expression: getValue('A5') + getValue('A20') },
+                    { name: "Beta", expression: getValue('A15') / getValue('A7') },
+                    { name: "Charlie", expression: getValue('A13') * getValue('A12') },
+                ];
+
+                let table2 = '<table><tr><th>Category</th><th>Value</th></tr>';
+
+                for (let i = 0; i < categories.length; i++) {
+                    table2 += `<tr><td>${categories[i].name}</td><td>${categories[i].expression}</td></tr>`;
+                    console.log(categories[i].expression)
+                    console.log(categories[i])
+                }
+                console.log(data)
+
+                table2 += '</table>';
+
+
+                document.getElementById('table2').innerHTML = table2;
+            })
+            .catch(error => {
+                console.error("err",);
+            });
+
+        function getValue(indexName) {
+            const found = data.find(entry => entry.index === indexName);
+            return found ? found.value : NaN;
+        }
+
+    </script>
+
+</body>
+
+</html>
